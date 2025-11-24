@@ -1,0 +1,100 @@
+====================================================
+INSTRUCCIONES DE INSTALACIÓN - Sistema de Inventario
+====================================================
+
+IMPORTANTE: Este sistema requiere un servidor PHP para funcionar.
+NO puedes abrir index.html directamente en el navegador.
+
+====================================================
+MÉTODO 1: XAMPP (Recomendado para Windows)
+====================================================
+
+1. DESCARGAR XAMPP:
+   - Ve a: https://www.apachefriends.org/
+   - Descarga la versión para Windows
+   - Instala XAMPP (recomendado: C:\xampp\)
+
+2. COPIAR ARCHIVOS:
+   - Copia TODA la carpeta "carrusel" a: C:\xampp\htdocs\
+   - Ruta final: C:\xampp\htdocs\carrusel\
+
+3. INICIAR SERVICIOS:
+   - Abre "XAMPP Control Panel"
+   - Haz clic en "Start" en Apache
+   - Haz clic en "Start" en MySQL
+
+4. CREAR BASE DE DATOS:
+   a) Ve a: http://localhost/phpmyadmin
+   b) Haz clic en "Nueva" (New) en el menú izquierdo
+   c) Nombre de base de datos: inventory_system
+   d) Cotejamiento: utf8mb4_unicode_ci
+   e) Haz clic en "Crear"
+   
+   f) Selecciona la base de datos "inventory_system"
+   g) Ve a la pestaña "SQL"
+   h) Abre el archivo: carrusel\database\schema.sql con Notepad
+   i) Copia TODO el contenido
+   j) Pégalo en el editor SQL de phpMyAdmin
+   k) Haz clic en "Continuar" o "Go"
+
+5. VERIFICAR CONFIGURACIÓN:
+   - Abre: carrusel\config\database.php
+   - Verifica que las credenciales sean:
+     * Host: localhost
+     * Database: inventory_system
+     * Username: root
+     * Password: (vacío)
+
+6. ACCEDER AL SISTEMA:
+   - Abre tu navegador
+   - Ve a: http://localhost/carrusel/
+   - ¡Listo! El sistema debería funcionar
+
+====================================================
+MÉTODO 2: PHP Built-in Server (Más rápido si ya tienes PHP)
+====================================================
+
+Si ya tienes PHP instalado en tu sistema:
+
+1. Abre PowerShell en la carpeta del proyecto
+2. Ejecuta: php -S localhost:8000
+3. Abre el navegador en: http://localhost:8000/
+
+NOTA: Aún necesitas MySQL corriendo y la base de datos creada.
+
+====================================================
+ERRORES COMUNES
+====================================================
+
+ERROR: "SyntaxError: Unexpected token '<', "<?php..."
+CAUSA: Estás abriendo index.html directamente (file://)
+SOLUCIÓN: Usa http://localhost/carrusel/
+
+ERROR: "Error de conexión a base de datos"
+CAUSA: MySQL no está corriendo o la base de datos no existe
+SOLUCIÓN: Inicia MySQL en XAMPP y crea la base de datos
+
+ERROR: "404 Not Found"
+CAUSA: La ruta no es correcta
+SOLUCIÓN: Verifica que la carpeta esté en C:\xampp\htdocs\carrusel\
+
+====================================================
+VERIFICAR QUE TODO FUNCIONA
+====================================================
+
+1. Apache verde en XAMPP Control Panel ✓
+2. MySQL verde en XAMPP Control Panel ✓
+3. http://localhost/phpmyadmin funciona ✓
+4. Base de datos 'inventory_system' existe ✓
+5. http://localhost/carrusel/ muestra el sistema ✓
+
+====================================================
+SOPORTE
+====================================================
+
+Si sigues teniendo problemas:
+1. Abre la consola del navegador (F12)
+2. Ve a la pestaña "Network" o "Red"
+3. Recarga la página
+4. Revisa qué URLs están fallando
+5. Verifica que las rutas sean http:// y no file://

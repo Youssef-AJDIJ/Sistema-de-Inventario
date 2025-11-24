@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/print.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>📦 Sistema de Gestión de Inventario</h1>
+        <p>Control completo de productos, stock y facturación</p>
+    </div>
+
+    <div class="container">
+        <!-- Navegación -->
+        <div class="nav-tabs">
+            <button class="nav-btn active" data-tab="dashboard">
+                📊 Dashboard
+            </button>
+            <button class="nav-btn" data-tab="products">
+                📦 Productos
+            </button>
+            <button class="nav-btn" data-tab="inventory">
+                📋 Inventario
+            </button>
+            <button class="nav-btn" data-tab="customers">
+                👥 Clientes
+            </button>
+            <button class="nav-btn" data-tab="invoices">
+                🧾 Facturas
+            </button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid" id="statsGrid">
+                <!-- Las estadísticas se cargarán dinámicamente -->
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">⚠️ Productos con Stock Bajo</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock Actual</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTable">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos -->
+        <div id="products" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Gestión de Productos</h2>
+                    <button class="btn btn-primary" onclick="openProductModal()">
+                        ➕ Nuevo Producto
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="productSearch" placeholder="Buscar productos..." onkeyup="searchProducts()">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventario -->
+        <div id="inventory" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Control de Inventario</h2>
+                    <button class="btn btn-success" onclick="loadInventory()">
+                        🔄 Actualizar
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock Actual</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Última Actualización</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clientes -->
+        <div id="customers" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Gestión de Clientes</h2>
+                    <button class="btn btn-primary" onclick="openCustomerModal()">
+                        ➕ Nuevo Cliente
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="customerSearch" placeholder="Buscar clientes..." onkeyup="searchCustomers()">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>NIF/CIF</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTable">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Facturas -->
+        <div id="invoices" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Gestión de Facturas</h2>
+                    <button class="btn btn-primary" onclick="openInvoiceModal()">
+                        ➕ Nueva Factura
+                    </button>
+                </div>
+
+                <div class="flex flex-gap mb-2">
+                    <select id="statusFilter" class="form-select" onchange="filterInvoices()" style="max-width: 200px;">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="pagada">Pagada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nº Factura</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoicesTable">
+                            <!-- Se carga dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="productModalTitle">Nuevo Producto</h3>
+                <button class="close-btn" onclick="closeProductModal()">✕</button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <input type="hidden" id="productId">
+
+                <div class="form-group">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" class="form-input" id="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-textarea" id="productDescription"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Precio *</label>
+                    <input type="number" step="0.01" class="form-input" id="productPrice" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <input type="text" class="form-input" id="productCategory">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cantidad Inicial</label>
+                    <input type="number" class="form-input" id="productQuantity" value="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Stock Mínimo</label>
+                    <input type="number" class="form-input" id="productMinStock" value="10">
+                </div>
+
+                <div class="flex flex-gap flex-between">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cliente -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="customerModalTitle">Nuevo Cliente</h3>
+                <button class="close-btn" onclick="closeCustomerModal()">✕</button>
+            </div>
+            <form id="customerForm" onsubmit="saveCustomer(event)">
+                <input type="hidden" id="customerId">
+
+                <div class="form-group">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" class="form-input" id="customerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="customerEmail">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" class="form-input" id="customerPhone">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <textarea class="form-textarea" id="customerAddress"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">NIF/CIF</label>
+                    <input type="text" class="form-input" id="customerTaxId">
+                </div>
+
+                <div class="flex flex-gap flex-between">
+                    <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Actualizar Inventario -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Actualizar Inventario</h3>
+                <button class="close-btn" onclick="closeInventoryModal()">✕</button>
+            </div>
+            <form id="inventoryForm" onsubmit="saveInventory(event)">
+                <input type="hidden" id="inventoryProductId">
+
+                <div class="form-group">
+                    <label class="form-label">Producto</label>
+                    <input type="text" class="form-input" id="inventoryProductName" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cantidad *</label>
+                    <input type="number" class="form-input" id="inventoryQuantity" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Stock Mínimo *</label>
+                    <input type="number" class="form-input" id="inventoryMinStock" required>
+                </div>
+
+                <div class="flex flex-gap flex-between">
+                    <button type="button" class="btn btn-secondary" onclick="closeInventoryModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        💾 Actualizar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Factura -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Nueva Factura</h3>
+                <button class="close-btn" onclick="closeInvoiceModal()">✕</button>
+            </div>
+            <form id="invoiceForm" onsubmit="saveInvoice(event)">
+                <div class="form-group">
+                    <label class="form-label">Cliente *</label>
+                    <select class="form-select" id="invoiceCustomer" required>
+                        <option value="">Seleccionar cliente...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-input" id="invoiceDate">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notas</label>
+                    <textarea class="form-textarea" id="invoiceNotes"></textarea>
+                </div>
+
+                <div class="card-header">
+                    <h4>Productos</h4>
+                    <button type="button" class="btn btn-primary" onclick="addInvoiceItem()">
+                        ➕ Agregar Producto
+                    </button>
+                </div>
+
+                <div id="invoiceItems">
+                    <!-- Los items se agregarán dinámicamente -->
+                </div>
+
+                <div class="mt-2">
+                    <h3 class="text-right">Total: <span id="invoiceTotal">0.00</span> €</h3>
+                </div>
+
+                <div class="flex flex-gap flex-between mt-2">
+                    <button type="button" class="btn btn-secondary" onclick="closeInvoiceModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Crear Factura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Factura -->
+    <div id="viewInvoiceModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header no-print">
+                <h3 class="modal-title">Detalles de Factura</h3>
+                <div class="flex flex-gap">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        🖨️ Imprimir
+                    </button>
+                    <button class="close-btn" onclick="closeViewInvoiceModal()">✕</button>
+                </div>
+            </div>
+            <div id="invoiceContent" class="print-content">
+                <!-- El contenido de la factura se carga dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificaciones -->
+    <div id="notifications" style="position: fixed; top: 20px; right: 20px; z-index: 2000;">
+        <!-- Las notificaciones aparecerán aquí -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/inventory.js"></script>
+    <script src="assets/js/customers.js"></script>
+    <script src="assets/js/invoices.js"></script>
+
+    <script>
+        // Inicializar la fecha de hoy en el modal de factura
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+        });
+    </script>
+</body>
+
+</html>
